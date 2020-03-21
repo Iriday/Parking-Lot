@@ -27,6 +27,10 @@ class Main {
                     if (leftOrNot) output("Spot ${input[1]} is free.")
                     else output("There is no car in the spot ${input[1]}.")
                 }
+                "status" -> {
+                    val out = status(spots)
+                    output(if (out.isEmpty()) "Parking lot is empty." else out.dropLast(1))
+                }
                 "exit" -> on = false
 
                 else -> output("Incorrect input.")
@@ -53,4 +57,17 @@ fun leave(spotNumber: Int, spots: Array<Spot?>): Boolean {
     if (spots[spotNumber - 1] == null) return false
     spots[spotNumber - 1] = null
     return true
+}
+
+fun status(spots: Array<Spot?>): String {
+    val builder = StringBuilder()
+    for ((i, spot) in spots.withIndex()) {
+        if (spot != null) {
+            builder.append(i + 1) // parking spot number (starts from 1)
+            builder.append(' ')
+            builder.append(spot)
+            builder.append('\n')
+        }
+    }
+    return builder.toString()
 }
