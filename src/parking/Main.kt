@@ -17,43 +17,45 @@ class Main {
         while (on) {
             val input = input()
 
-            when (input[0].toLowerCase()) {
+            output(when (input[0].toLowerCase()) {
                 "create" -> {
                     val size = input[1].toInt()
-                    if (size < 1) output("Incorrect input.")
+                    if (size < 1) "Incorrect input."
                     else {
                         spots = Array(size) { null }
-                        output("Created a parking lot with $size spots.")
                         created = true
+                        "Created a parking lot with $size spots."
                     }
                 }
                 "park" -> {
-                    if (!created) output("Parking lot is not created.")
+                    if (!created) "Parking lot is not created."
                     else {
                         val spotNumber = park(input[1], input[2], spots)
-                        if (spotNumber == -1) output("Sorry, parking lot is full.")
-                        else output("${input[2]} car parked on the spot $spotNumber.")
+                        if (spotNumber == -1) "Sorry, parking lot is full."
+                        else "${input[2]} car parked on the spot $spotNumber."
                     }
                 }
                 "leave" -> {
-                    if (!created) output("Parking lot is not created.")
+                    if (!created) "Parking lot is not created."
                     else {
-                        val leftOrNot = leave(input[1].toInt(), spots)
-                        if (leftOrNot) output("Spot ${input[1]} is free.")
-                        else output("There is no car in the spot ${input[1]}.")
+                        val unitLeft = leave(input[1].toInt(), spots)
+                        if (unitLeft) "Spot ${input[1]} is free."
+                        else "There is no car in the spot ${input[1]}."
                     }
                 }
                 "status" -> {
-                    if (!created) output("Parking lot is not created.")
+                    if (!created) "Parking lot is not created."
                     else {
                         val out = status(spots)
-                        output(if (out.isEmpty()) "Parking lot is empty." else out.dropLast(1))
+                        if (out.isEmpty()) "Parking lot is empty." else out.dropLast(1)
                     }
                 }
-                "exit" -> on = false
-
-                else -> output("Incorrect input.")
-            }
+                "exit" -> {
+                    on = false
+                    ""
+                }
+                else -> "Incorrect input."
+            })
         }
     }
 
