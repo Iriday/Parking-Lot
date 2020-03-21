@@ -8,7 +8,7 @@ fun main() {
 
 class Main {
     private val scn = Scanner(System.`in`)
-    private val spots = arrayOf(Spot("1234567890", "Red"), null, null)
+    private val spots = Array<Spot?>(20) { null }
 
     fun run() {
         var on = true
@@ -19,7 +19,7 @@ class Main {
             when (input[0].toLowerCase()) {
                 "park" -> {
                     val spotNumber = park(input[1], input[2], spots)
-                    if (spotNumber == -1) output("No empty spots left.")
+                    if (spotNumber == -1) output("Sorry, parking lot is full.")
                     else output("${input[2]} car parked on the spot $spotNumber.")
                 }
                 "leave" -> {
@@ -40,12 +40,13 @@ class Main {
 }
 
 fun park(unitNumber: String, unitColor: String, spots: Array<Spot?>): Int {
-    val emptySpotIndex = if (spots[0] == null) 0 else if (spots[1] == null) 1 else if (spots[2] == null) 2 else -1
-
-    if (emptySpotIndex == -1) return emptySpotIndex
-
-    spots[emptySpotIndex] = Spot(unitNumber, unitColor)
-    return emptySpotIndex + 1
+    for (i in spots.indices) {
+        if (spots[i] == null) {
+            spots[i] = Spot(unitNumber, unitColor)
+            return i + 1 // spots start from 1
+        }
+    }
+    return -1 // no empty spots
 }
 
 fun leave(spotNumber: Int, spots: Array<Spot?>): Boolean {
