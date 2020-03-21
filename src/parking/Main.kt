@@ -8,28 +8,47 @@ fun main() {
 
 class Main {
     private val scn = Scanner(System.`in`)
-    private val spots = Array<Spot?>(20) { null }
+    private lateinit var spots: Array<Spot?>
 
     fun run() {
         var on = true
+        var created = false // parking lot
 
         while (on) {
             val input = input()
 
             when (input[0].toLowerCase()) {
+                "create" -> {
+                    val size = input[1].toInt()
+                    if (size < 1) output("Incorrect input.")
+                    else {
+                        spots = Array(size) { null }
+                        output("Created a parking lot with $size spots.")
+                        created = true
+                    }
+                }
                 "park" -> {
-                    val spotNumber = park(input[1], input[2], spots)
-                    if (spotNumber == -1) output("Sorry, parking lot is full.")
-                    else output("${input[2]} car parked on the spot $spotNumber.")
+                    if (!created) output("Parking lot is not created.")
+                    else {
+                        val spotNumber = park(input[1], input[2], spots)
+                        if (spotNumber == -1) output("Sorry, parking lot is full.")
+                        else output("${input[2]} car parked on the spot $spotNumber.")
+                    }
                 }
                 "leave" -> {
-                    val leftOrNot = leave(input[1].toInt(), spots)
-                    if (leftOrNot) output("Spot ${input[1]} is free.")
-                    else output("There is no car in the spot ${input[1]}.")
+                    if (!created) output("Parking lot is not created.")
+                    else {
+                        val leftOrNot = leave(input[1].toInt(), spots)
+                        if (leftOrNot) output("Spot ${input[1]} is free.")
+                        else output("There is no car in the spot ${input[1]}.")
+                    }
                 }
                 "status" -> {
-                    val out = status(spots)
-                    output(if (out.isEmpty()) "Parking lot is empty." else out.dropLast(1))
+                    if (!created) output("Parking lot is not created.")
+                    else {
+                        val out = status(spots)
+                        output(if (out.isEmpty()) "Parking lot is empty." else out.dropLast(1))
+                    }
                 }
                 "exit" -> on = false
 
