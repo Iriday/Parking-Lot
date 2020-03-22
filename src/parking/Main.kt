@@ -8,7 +8,7 @@ fun main() {
 
 class Main {
     private val scn = Scanner(System.`in`)
-    private lateinit var spots: Array<Spot?>
+    private lateinit var spots: Array<Spot>
 
     fun run() {
         var on = true
@@ -22,7 +22,8 @@ class Main {
                     val size = input[1].toInt()
                     if (size < 1) "Incorrect input."
                     else {
-                        spots = Array(size) { null }
+                        var i = 0 // supplier
+                        spots = Array(size) { Spot((++i).toString()) }
                         created = true
                         "Created a parking lot with $size spots."
                     }
@@ -30,17 +31,18 @@ class Main {
                 "park" -> {
                     if (!created) "Parking lot is not created."
                     else {
-                        val spotNumber = park(input[1], input[2], spots)
-                        if (spotNumber == -1) "Sorry, parking lot is full."
-                        else "${input[2]} car parked on the spot $spotNumber."
+                        val spotIdentifier = park(Car(input[1], input[2]), spots)
+                        if (spotIdentifier != null) "${input[2]} car parked on the spot $spotIdentifier."
+                        else "Sorry, parking lot is full."
                     }
                 }
                 "leave" -> {
                     if (!created) "Parking lot is not created."
                     else {
-                        val unitLeft = leave(input[1].toInt(), spots)
-                        if (unitLeft) "Spot ${input[1]} is free."
-                        else "There is no car in the spot ${input[1]}."
+                        val unitLeft = leave(input[1], spots)
+                        if (unitLeft == true) "Spot ${input[1]} is free."
+                        else if (unitLeft == false) "There is no car in the spot ${input[1]}."
+                        else "Incorrect input"
                     }
                 }
                 "status" -> {
@@ -64,28 +66,33 @@ class Main {
     private fun output(str: String) = println(str)
 }
 
-fun park(unitNumber: String, unitColor: String, spots: Array<Spot?>): Int {
+fun park(car: Car, spots: Array<Spot>): String? {
     for (i in spots.indices) {
-        if (spots[i] == null) {
-            spots[i] = Spot(unitNumber, unitColor)
-            return i + 1 // spots start from 1
+        if (spots[i].car == null) {
+            spots[i].car = car
+            return spots[i].spotIdentifier
         }
     }
-    return -1 // no empty spots
+    return null // no empty parking spots
 }
 
-fun leave(spotNumber: Int, spots: Array<Spot?>): Boolean {
-    if (spots[spotNumber - 1] == null) return false
-    spots[spotNumber - 1] = null
-    return true
+fun leave(spotIdentifier: String, spots: Array<Spot>): Boolean? {
+    for (spot in spots) {
+        if (spot.spotIdentifier == spotIdentifier) {
+            if (spot.car == null) return false
+            else {
+                spot.car = null
+                return true
+            }
+        }
+    }
+    return null // incorrect identifier
 }
 
-fun status(spots: Array<Spot?>): String {
+fun status(spots: Array<Spot>): String {
     val builder = StringBuilder()
-    for ((i, spot) in spots.withIndex()) {
-        if (spot != null) {
-            builder.append(i + 1) // parking spot number (starts from 1)
-            builder.append(' ')
+    for (spot in spots) {
+        if (spot.car != null) {
             builder.append(spot)
             builder.append('\n')
         }

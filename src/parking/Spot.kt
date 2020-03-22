@@ -1,7 +1,6 @@
 package parking
 
-class Spot(val unitNumber: String, val unitColor: String) {
-    override fun toString(): String {
-        return "$unitNumber $unitColor"
-    }
+class Spot(val spotIdentifier: String, var car: Car? = null) {
+
+    override fun toString(): String = "$spotIdentifier $car"
 }
