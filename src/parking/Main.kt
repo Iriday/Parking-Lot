@@ -28,6 +28,11 @@ class Main {
                 continue
             }
 
+            if (!created && !(command == CREATE || command == EXIT)) {
+                output("Parking lot is not created.")
+                continue
+            }
+
             output(when (command) {
                 CREATE -> {
                     val size = input[1].toInt()
@@ -40,52 +45,34 @@ class Main {
                     }
                 }
                 PARK -> {
-                    if (!created) "Parking lot is not created."
-                    else {
-                        val spotIdentifier = park(Car(input[1], input[2]), spots)
-                        if (spotIdentifier != null) "${input[2]} car parked on the spot $spotIdentifier."
-                        else "Sorry, parking lot is full."
-                    }
+                    val spotIdentifier = park(Car(input[1], input[2]), spots)
+                    if (spotIdentifier != null) "${input[2]} car parked on the spot $spotIdentifier."
+                    else "Sorry, parking lot is full."
                 }
                 LEAVE -> {
-                    if (!created) "Parking lot is not created."
-                    else {
-                        val unitLeft = leave(input[1], spots)
-                        if (unitLeft == true) "Spot ${input[1]} is free."
-                        else if (unitLeft == false) "There is no car in the spot ${input[1]}."
-                        else "Incorrect input"
-                    }
+                    val unitLeft = leave(input[1], spots)
+                    if (unitLeft == true) "Spot ${input[1]} is free."
+                    else if (unitLeft == false) "There is no car in the spot ${input[1]}."
+                    else "Incorrect input"
                 }
                 STATUS -> {
-                    if (!created) "Parking lot is not created."
-                    else {
-                        val out = status(spots)
-                        if (out.isEmpty()) "Parking lot is empty." else out.dropLast(1)
-                    }
+                    val out = status(spots)
+                    if (out.isEmpty()) "Parking lot is empty." else out.dropLast(1)
                 }
                 REG_BY_COLOR -> {
-                    if (!created) "Parking lot is not created."
-                    else {
-                        val out = regByColor(input[1], spots)
-                        if (out.isNotEmpty()) out
-                        else "No cars with color ${input[1]} were found."
-                    }
+                    val out = regByColor(input[1], spots)
+                    if (out.isNotEmpty()) out
+                    else "No cars with color ${input[1]} were found."
                 }
                 SPOT_BY_COLOR -> {
-                    if (!created) "Parking lot is not created."
-                    else {
-                        val out = spotByColor(input[1], spots)
-                        if (out.isNotEmpty()) out
-                        else "No cars with color ${input[1]} were found."
-                    }
+                    val out = spotByColor(input[1], spots)
+                    if (out.isNotEmpty()) out
+                    else "No cars with color ${input[1]} were found."
                 }
                 SPOT_BY_REG -> {
-                    if (!created) "Parking lot is not created."
-                    else {
-                        val out = spotByReg(input[1], spots)
-                        if (out.isNotEmpty()) out
-                        else "No cars with registration number ${input[1]} where found."
-                    }
+                    val out = spotByReg(input[1], spots)
+                    if (out.isNotEmpty()) out
+                    else "No cars with registration number ${input[1]} where found."
                 }
                 EXIT -> {
                     on = false
