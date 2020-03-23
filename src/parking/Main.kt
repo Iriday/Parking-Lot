@@ -60,6 +60,14 @@ class Main {
                         else "No cars with color ${input[1]} were found."
                     }
                 }
+                "spot_by_color" -> {
+                    if (!created) "Parking lot is not created."
+                    else {
+                        val out = spotByColor(input[1], spots)
+                        if (out.isNotEmpty()) out
+                        else "No cars with color ${input[1]} were found."
+                    }
+                }
                 "exit" -> {
                     on = false
                     ""
@@ -113,6 +121,17 @@ fun regByColor(color: String, spots: Array<Spot>): String {
     spots.forEach { spot ->
         if (spot.car?.color.equals(color, true)) {
             builder.append(spot.car?.number)
+            builder.append(", ")
+        }
+    }
+    return builder.toString().removeSuffix(", ")
+}
+
+fun spotByColor(color: String, spots: Array<Spot>): String {
+    val builder = StringBuilder()
+    spots.forEach { spot ->
+        if (spot.car?.color.equals(color, true)) {
+            builder.append(spot.spotIdentifier)
             builder.append(", ")
         }
     }
