@@ -10,13 +10,12 @@ fun main() {
 class Main {
     private val scn = Scanner(System.`in`)
     private lateinit var spots: Array<Spot>
+    private var on = true
+    private var created = false // parking lot
 
     fun run() {
-        var on = true
-        var created = false // parking lot
-
-        var command: Command
         var input: List<String>
+        var command: Command
 
         while (on) {
             input = input()
@@ -33,52 +32,56 @@ class Main {
                 continue
             }
 
-            output(when (command) {
-                CREATE -> {
-                    val size = input[1].toInt()
-                    if (size < 1) "Incorrect input."
-                    else {
-                        var i = 0 // supplier
-                        spots = Array(size) { Spot((++i).toString()) }
-                        created = true
-                        "Created a parking lot with $size spots."
-                    }
+            output(executeCommand(command, input))
+        }
+    }
+
+    private fun executeCommand(command: Command, input: List<String>): String {
+        return when (command) {
+            CREATE -> {
+                val size = input[1].toInt()
+                if (size < 1) "Incorrect input."
+                else {
+                    var i = 0 // supplier
+                    spots = Array(size) { Spot((++i).toString()) }
+                    created = true
+                    "Created a parking lot with $size spots."
                 }
-                PARK -> {
-                    val spotIdentifier = park(Car(input[1], input[2]), spots)
-                    if (spotIdentifier != null) "${input[2]} car parked on the spot $spotIdentifier."
-                    else "Sorry, parking lot is full."
-                }
-                LEAVE -> {
-                    val unitLeft = leave(input[1], spots)
-                    if (unitLeft == true) "Spot ${input[1]} is free."
-                    else if (unitLeft == false) "There is no car in the spot ${input[1]}."
-                    else "Incorrect input"
-                }
-                STATUS -> {
-                    val out = status(spots)
-                    if (out.isEmpty()) "Parking lot is empty." else out.dropLast(1)
-                }
-                REG_BY_COLOR -> {
-                    val out = regByColor(input[1], spots)
-                    if (out.isNotEmpty()) out
-                    else "No cars with color ${input[1]} were found."
-                }
-                SPOT_BY_COLOR -> {
-                    val out = spotByColor(input[1], spots)
-                    if (out.isNotEmpty()) out
-                    else "No cars with color ${input[1]} were found."
-                }
-                SPOT_BY_REG -> {
-                    val out = spotByReg(input[1], spots)
-                    if (out.isNotEmpty()) out
-                    else "No cars with registration number ${input[1]} where found."
-                }
-                EXIT -> {
-                    on = false
-                    ""
-                }
-            })
+            }
+            PARK -> {
+                val spotIdentifier = park(Car(input[1], input[2]), spots)
+                if (spotIdentifier != null) "${input[2]} car parked on the spot $spotIdentifier."
+                else "Sorry, parking lot is full."
+            }
+            LEAVE -> {
+                val unitLeft = leave(input[1], spots)
+                if (unitLeft == true) "Spot ${input[1]} is free."
+                else if (unitLeft == false) "There is no car in the spot ${input[1]}."
+                else "Incorrect input"
+            }
+            STATUS -> {
+                val out = status(spots)
+                if (out.isEmpty()) "Parking lot is empty." else out.dropLast(1)
+            }
+            REG_BY_COLOR -> {
+                val out = regByColor(input[1], spots)
+                if (out.isNotEmpty()) out
+                else "No cars with color ${input[1]} were found."
+            }
+            SPOT_BY_COLOR -> {
+                val out = spotByColor(input[1], spots)
+                if (out.isNotEmpty()) out
+                else "No cars with color ${input[1]} were found."
+            }
+            SPOT_BY_REG -> {
+                val out = spotByReg(input[1], spots)
+                if (out.isNotEmpty()) out
+                else "No cars with registration number ${input[1]} where found."
+            }
+            EXIT -> {
+                on = false
+                ""
+            }
         }
     }
 
