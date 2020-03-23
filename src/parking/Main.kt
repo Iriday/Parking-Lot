@@ -1,6 +1,7 @@
 package parking
 
 import java.util.*
+import parking.Command.*
 
 fun main() {
     Main().run()
@@ -14,11 +15,21 @@ class Main {
         var on = true
         var created = false // parking lot
 
-        while (on) {
-            val input = input()
+        var command: Command
+        var input: List<String>
 
-            output(when (input[0].toLowerCase()) {
-                "create" -> {
+        while (on) {
+            input = input()
+
+            try {
+                command = valueOf(input[0].toUpperCase())
+            } catch (e: IllegalArgumentException) {
+                output("Unknown command.")
+                continue
+            }
+
+            output(when (command) {
+                CREATE -> {
                     val size = input[1].toInt()
                     if (size < 1) "Incorrect input."
                     else {
@@ -28,7 +39,7 @@ class Main {
                         "Created a parking lot with $size spots."
                     }
                 }
-                "park" -> {
+                PARK -> {
                     if (!created) "Parking lot is not created."
                     else {
                         val spotIdentifier = park(Car(input[1], input[2]), spots)
@@ -36,7 +47,7 @@ class Main {
                         else "Sorry, parking lot is full."
                     }
                 }
-                "leave" -> {
+                LEAVE -> {
                     if (!created) "Parking lot is not created."
                     else {
                         val unitLeft = leave(input[1], spots)
@@ -45,14 +56,14 @@ class Main {
                         else "Incorrect input"
                     }
                 }
-                "status" -> {
+                STATUS -> {
                     if (!created) "Parking lot is not created."
                     else {
                         val out = status(spots)
                         if (out.isEmpty()) "Parking lot is empty." else out.dropLast(1)
                     }
                 }
-                "reg_by_color" -> {
+                REG_BY_COLOR -> {
                     if (!created) "Parking lot is not created."
                     else {
                         val out = regByColor(input[1], spots)
@@ -60,7 +71,7 @@ class Main {
                         else "No cars with color ${input[1]} were found."
                     }
                 }
-                "spot_by_color" -> {
+                SPOT_BY_COLOR -> {
                     if (!created) "Parking lot is not created."
                     else {
                         val out = spotByColor(input[1], spots)
@@ -68,7 +79,7 @@ class Main {
                         else "No cars with color ${input[1]} were found."
                     }
                 }
-                "spot_by_reg" -> {
+                SPOT_BY_REG -> {
                     if (!created) "Parking lot is not created."
                     else {
                         val out = spotByReg(input[1], spots)
@@ -76,11 +87,10 @@ class Main {
                         else "No cars with registration number ${input[1]} where found."
                     }
                 }
-                "exit" -> {
+                EXIT -> {
                     on = false
                     ""
                 }
-                else -> "Incorrect input."
             })
         }
     }
