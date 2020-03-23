@@ -74,7 +74,7 @@ class Main {
             SPOT_BY_REG -> {
                 val out = spotByReg(input[1], spots)
                 if (out.isNotEmpty()) out
-                else "No cars with registration number ${input[1]} where found."
+                else "No cars with registration number ${input[1]} were found."
             }
             EXIT -> {
                 on = false
