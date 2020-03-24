@@ -4,10 +4,10 @@ import java.util.*
 import parking.Command.*
 
 fun main() {
-    Main().run()
+    ParkingLot().run()
 }
 
-class Main {
+class ParkingLot {
     private val scn = Scanner(System.`in`)
     private var spots: Array<Spot> = arrayOf()
     private var on = true
